@@ -22,21 +22,21 @@ public class SHA_512 extends SHA_3 {
     byte @NotNull [][][] initialHash(int length) {
         final byte[][][] H0 = new byte[length][8][];
         H0[0] = new byte[][]{
-                toWBits(ByteBuffer.allocate(8).putLong(H512[0]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[1]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[2]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[3]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[4]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[5]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[6]).array(), 32),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[7]).array(), 32)
+                toWBits(ByteBuffer.allocate(8).putLong(H512[0]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[1]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[2]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[3]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[4]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[5]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[6]).array(), 64),
+                toWBits(ByteBuffer.allocate(8).putLong(H512[7]).array(), 64)
         };
 
         return H0;
     }
 
     @Override
-    String finalValue(byte @NotNull [][][] H0, int length) {
+    String finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
         BitSet set = new BitSet(512);
         for (int i = 0; i < 8; i++) {
             BitSet subSet = BitSet.valueOf(H0[length][i]);

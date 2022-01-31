@@ -1,6 +1,7 @@
 package com.github.jakobwilms.cryptojar;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.BitSet;
@@ -11,9 +12,9 @@ import static com.github.jakobwilms.cryptojar.SHA_Helper.add;
 public abstract class SHA_3 extends HashAlgorithm {
 
     @Override
-    public String hash(byte @NotNull [] bytes) {
+    public String hash(byte @NotNull [] bytes, final int truncate) {
         BitSet[] bitSets = preprocess(BitSet.valueOf(bytes), bytes.length * 8);
-        return compute(bitSets);
+        return finalValue(compute(bitSets, truncate, null), bitSets.length, -1);
     }
 
     @Override
@@ -38,8 +39,8 @@ public abstract class SHA_3 extends HashAlgorithm {
         return sets;
     }
 
-    String compute(final @NotNull BitSet @NotNull [] sets) {
-        byte[][][] H0 = initialHash(sets.length + 1);
+    byte @NotNull [][][] compute(final @NotNull BitSet @NotNull [] sets, final int truncate, byte @Nullable [][][] h0) {
+        byte[][][] H0 = h0 == null ? initialHash(sets.length + 1) : h0;
 
         for (int i = 0; i < sets.length; i++) {
             final byte[][] w = new byte[80][8];
@@ -74,10 +75,10 @@ public abstract class SHA_3 extends HashAlgorithm {
             H0[i + 1][7] = add(a, H0[i][7]);
         }
 
-        return finalValue(H0, sets.length);
+        return H0;
     }
 
-    abstract String finalValue(final byte @NotNull [][][] H0, final int length);
+    abstract String finalValue(final byte @NotNull [][][] H0, final int length, final int truncate);
 
     abstract byte @NotNull [][][] initialHash(final int length);
 }

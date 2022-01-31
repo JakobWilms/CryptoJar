@@ -28,7 +28,7 @@ public abstract class SHA_1_2 extends HashAlgorithm {
     }
 
     @Override
-    public String hash(byte @NotNull [] bytes) {
+    public String hash(byte @NotNull [] bytes, final int truncate) {
         BitSet[] bitSets = preprocess(BitSet.valueOf(bytes), bytes.length * 8);
         return compute(bitSets);
     }

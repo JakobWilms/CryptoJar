@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Range;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
-public class SHA_Helper {
+class SHA_Helper {
 
     static final int[] K1 = {
             0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999, 0x5a827999,
