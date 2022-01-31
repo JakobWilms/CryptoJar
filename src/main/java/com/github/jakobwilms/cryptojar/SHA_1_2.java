@@ -6,17 +6,6 @@ import java.util.BitSet;
 
 public abstract class SHA_1_2 extends HashAlgorithm {
 
-    /**
-     * Preprocess a BitSet with a given size. <br>
-     * This algorithm executes the following steps as specified by the Federal Information Processing Standards Publication: <br>
-     * 1) Padding the Message <br>
-     * 2) Parsing the Message <br>
-     *
-     * @param bitSet The set of bits to preprocess
-     * @param size   The size of the BitSet
-     *
-     * @return The preprocessed BitSet, as an array of BitSets, each with a size of 512
-     */
     BitSet @NotNull [] preprocess(final @NotNull BitSet bitSet, int size) {
         // PADDING
         bitSet.set(size, true);

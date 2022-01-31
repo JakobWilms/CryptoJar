@@ -3,6 +3,7 @@ package com.github.jakobwilms.cryptojar;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.util.BitSet;
 import java.util.Locale;
 
 public abstract class HashAlgorithm {
@@ -46,11 +47,25 @@ public abstract class HashAlgorithm {
         return hash(new FileInputStream(file));
     }
 
+    /**
+     * Preprocess a BitSet with a given size. <br>
+     * This algorithm executes the following steps as specified by the Federal Information Processing Standards Publication: <br>
+     * 1) Padding the Message <br>
+     * 2) Parsing the Message <br>
+     *
+     * @param bitSet The set of bits to preprocess
+     * @param size   The size of the BitSet
+     *
+     * @return The preprocessed BitSet, as an array of BitSets, each with a size of 512
+     */
+    abstract BitSet @NotNull [] preprocess(final @NotNull BitSet bitSet, int size);
+
     public static HashAlgorithm getInstance(@NotNull String algorithm) {
         return switch (algorithm.toLowerCase(Locale.ROOT)) {
             case "sha_256", "sha-256" -> SHA_256.getInstance();
             case "sha_224", "sha-224" -> SHA_224.getInstance();
             case "sha_1", "sha-1" -> SHA_1.getInstance();
+            case "sha_512", "sha-512" -> SHA_512.getInstance();
             default -> throw new IllegalArgumentException(String.format("Algorithm %s not found!", algorithm));
         };
     }
