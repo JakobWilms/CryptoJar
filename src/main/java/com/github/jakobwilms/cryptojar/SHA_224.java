@@ -38,7 +38,7 @@ public class SHA_224 extends SHA_2 {
 
     @Override
     @NotNull String finalValue(byte @NotNull [][][] H0, int length) {
-        BitSet set = new BitSet(256);
+        BitSet set = new BitSet(224);
         for (int i = 0; i < 7; i++) {
             BitSet subSet = BitSet.valueOf(H0[length][i]);
             for (int j = 0; j < 32; j++) {
