@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 
-import static com.github.jakobwilms.cryptojar.SHA_Helper.*;
+public class SHA_512_T extends SHA_2_B64 {
 
-public class SHA_512_T extends SHA_3 {
+    //////////////
+    // INSTANCE //
+    //////////////
 
     private static final SHA_512_T INSTANCE = new SHA_512_T();
 
@@ -18,8 +20,34 @@ public class SHA_512_T extends SHA_3 {
 
     private SHA_512_T() {}
 
+    ///////////////
+    // CONSTANTS //
+    ///////////////
+
+    private final long @NotNull [] _H512 = {
+            0x6a09e667f3bcc908L,
+            0xbb67ae8584caa73bL,
+            0x3c6ef372fe94f82bL,
+            0xa54ff53a5f1d36f1L,
+            0x510e527fade682d1L,
+            0x9b05688c2b3e6c1fL,
+            0x1f83d9abfb41bd6bL,
+            0x5be0cd19137e2179L,
+    };
+
+    private final byte @NotNull [][] H512 = {
+            ByteBuffer.allocate(8).putLong(_H512[0]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[1]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[2]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[3]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[4]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[5]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[6]).array(),
+            ByteBuffer.allocate(8).putLong(_H512[7]).array()
+    };
+
     @Override
-    public String hash(byte @NotNull [] bytes, final int truncate) {
+    public HashReturn hash(byte @NotNull [] bytes, final int truncate) {
         if (truncate <= 0)
             throw new IllegalArgumentException(String.format("Truncate Size must be greater than 0, value is %d", truncate));
         if (truncate % 64 != 0)
@@ -42,42 +70,17 @@ public class SHA_512_T extends SHA_3 {
     }
 
     byte @NotNull [][][] H0_2(final int length) {
-        byte[][] H0_1 = new byte[][]{
-                toWBits(ByteBuffer.allocate(8).putLong(H512[0]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[1]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[2]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[3]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[4]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[5]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[6]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H512[7]).array(), 64)
-        };
         byte[][][] H0_2 = new byte[length][8][];
         byte[] n = ByteBuffer.allocate(8).putLong(0xa5a5a5a5a5a5a5a5L).array();
-        for (int i = 0; i < 8; i++) {
-            H0_2[0][i] = xor(H0_1[i], n);
-        }
+        final BitwiseOperator operator = new BitwiseOperator();
+
+        for (int i = 0; i < 8; i++) H0_2[0][i] = operator.set(H512[i]).xor(n).getBytes();
 
         return H0_2;
     }
 
     @Override
-    String finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
-        BitSet set = new BitSet(truncate);
-        for (int i = 0; i < truncate / 64; i++) {
-            BitSet subSet = BitSet.valueOf(H0[length][i]);
-            for (int j = 0; j < 64; j++) {
-                set.set(i * 64 + j, subSet.get(j));
-            }
-        }
-        final byte[] hashedBytes = set.toByteArray();
-        StringBuilder hashedHex = new StringBuilder(2 * hashedBytes.length);
-        for (byte hashedByte : hashedBytes) {
-            String hex = Integer.toHexString(0xff & hashedByte);
-            if (hex.length() == 1) hashedHex.append('0');
-            hashedHex.append(hex);
-        }
-
-        return hashedHex.toString();
+    HashReturn finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
+        return new HashReturn.SHA_512_T_HashReturn(H0, length, truncate);
     }
 }

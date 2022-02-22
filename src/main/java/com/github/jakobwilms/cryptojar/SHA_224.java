@@ -3,11 +3,14 @@ package com.github.jakobwilms.cryptojar;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.BitSet;
 
-import static com.github.jakobwilms.cryptojar.SHA_Helper.*;
+public class SHA_224 extends SHA_2_B32 {
 
-public class SHA_224 extends SHA_2 {
+    //////////////
+    // INSTANCE //
+    //////////////
 
     private static final SHA_224 INSTANCE = new SHA_224();
 
@@ -15,44 +18,39 @@ public class SHA_224 extends SHA_2 {
         return INSTANCE;
     }
 
-    /**
-     * Single Private Constructor to prevent the default one from being generated
-     */
     private SHA_224() {}
+
+    ///////////////
+    // CONSTANTS //
+    ///////////////
+
+    private final int @NotNull [] _H224 = {
+            0xc1059ed8, 0x367cd507,
+            0x3070dd17, 0xf70e5939,
+            0xffc00b31, 0x68581511,
+            0x64f98fa7, 0xbefa4fa4
+    };
+
+    private final byte @NotNull [][] H224 = {
+            ByteBuffer.allocate(4).putInt(_H224[0]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[1]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[2]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[3]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[4]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[5]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[6]).array(),
+            ByteBuffer.allocate(4).putInt(_H224[7]).array()
+    };
 
     @Override
     byte @NotNull [][][] initialHash(int length) {
         byte[][][] H0 = new byte[length][8][];
-        H0[0] = new byte[][]{
-                toWBits(ByteBuffer.allocate(4).putInt(H224[0]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[1]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[2]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[3]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[4]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[5]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[6]).array(), 32),
-                toWBits(ByteBuffer.allocate(4).putInt(H224[7]).array(), 32)
-        };
+        H0[0] = Arrays.copyOf(H224, H224.length);
         return H0;
     }
 
     @Override
-    @NotNull String finalValue(byte @NotNull [][][] H0, int length) {
-        BitSet set = new BitSet(224);
-        for (int i = 0; i < 7; i++) {
-            BitSet subSet = BitSet.valueOf(H0[length][i]);
-            for (int j = 0; j < 32; j++) {
-                set.set(i * 32 + j, subSet.get(j));
-            }
-        }
-        final byte[] hashedBytes = set.toByteArray();
-        StringBuilder hashedHex = new StringBuilder(2 * hashedBytes.length);
-        for (byte hashedByte : hashedBytes) {
-            String hex = Integer.toHexString(0xff & hashedByte);
-            if (hex.length() == 1) hashedHex.append('0');
-            hashedHex.append(hex);
-        }
-
-        return hashedHex.toString();
+    @NotNull HashReturn finalValue(byte @NotNull [][][] H0, int length) {
+        return new HashReturn.SHA_224_HashReturn(H0, length);
     }
 }

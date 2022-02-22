@@ -3,11 +3,14 @@ package com.github.jakobwilms.cryptojar;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.BitSet;
 
-import static com.github.jakobwilms.cryptojar.SHA_Helper.*;
+public class SHA_384 extends SHA_2_B64 {
 
-public class SHA_384 extends SHA_3 {
+    //////////////
+    // INSTANCE //
+    //////////////
 
     private static final SHA_384 INSTANCE = new SHA_384();
 
@@ -17,40 +20,41 @@ public class SHA_384 extends SHA_3 {
 
     private SHA_384() {}
 
+    ///////////////
+    // CONSTANTS //
+    ///////////////
+
+    private final long @NotNull [] _H384 = {
+            0xcbbb9d5dc1059ed8L,
+            0x629a292a367cd507L,
+            0x9159015a3070dd17L,
+            0x152fecd8f70e5939L,
+            0x67332667ffc00b31L,
+            0x8eb44a8768581511L,
+            0xdb0c2e0d64f98fa7L,
+            0x47b5481dbefa4fa4L
+    };
+
+    private final byte @NotNull [][] H384 = {
+            ByteBuffer.allocate(8).putLong(_H384[0]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[1]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[2]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[3]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[4]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[5]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[6]).array(),
+            ByteBuffer.allocate(8).putLong(_H384[7]).array()
+    };
+
     @Override
     byte @NotNull [][][] initialHash(int length) {
         final byte[][][] H0 = new byte[length][8][];
-        H0[0] = new byte[][]{
-                toWBits(ByteBuffer.allocate(8).putLong(H384[0]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[1]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[2]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[3]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[4]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[5]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[6]).array(), 64),
-                toWBits(ByteBuffer.allocate(8).putLong(H384[7]).array(), 64)
-        };
-
+        H0[0] = Arrays.copyOf(H384, H384.length);
         return H0;
     }
 
     @Override
-    String finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
-        BitSet set = new BitSet(384);
-        for (int i = 0; i < 6; i++) {
-            BitSet subSet = BitSet.valueOf(H0[length][i]);
-            for (int j = 0; j < 64; j++) {
-                set.set(i * 64 + j, subSet.get(j));
-            }
-        }
-        final byte[] hashedBytes = set.toByteArray();
-        StringBuilder hashedHex = new StringBuilder(2 * hashedBytes.length);
-        for (byte hashedByte : hashedBytes) {
-            String hex = Integer.toHexString(0xff & hashedByte);
-            if (hex.length() == 1) hashedHex.append('0');
-            hashedHex.append(hex);
-        }
-
-        return hashedHex.toString();
+    HashReturn finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
+        return new HashReturn.SHA_384_HashReturn(H0, length);
     }
 }
