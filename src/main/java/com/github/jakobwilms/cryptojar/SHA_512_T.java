@@ -47,7 +47,7 @@ public class SHA_512_T extends SHA_2_B64 {
     };
 
     @Override
-    public HashReturn hash(byte @NotNull [] bytes, final int truncate) {
+    public SHA2_Return hash(byte @NotNull [] bytes, final int truncate) {
         if (truncate <= 0)
             throw new IllegalArgumentException(String.format("Truncate Size must be greater than 0, value is %d", truncate));
         if (truncate % 64 != 0)
@@ -80,7 +80,7 @@ public class SHA_512_T extends SHA_2_B64 {
     }
 
     @Override
-    HashReturn finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
-        return new HashReturn.SHA_512_T_HashReturn(H0, length, truncate);
+    SHA2_Return finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
+        return new SHA2_Return.SHA_512_T_HashReturn(H0, length, truncate);
     }
 }

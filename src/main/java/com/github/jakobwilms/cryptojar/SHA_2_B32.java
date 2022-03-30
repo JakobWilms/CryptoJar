@@ -41,7 +41,7 @@ public abstract class SHA_2_B32 extends SHA_B32 {
     };
 
     @Override
-    HashReturn compute(final @NotNull BitSet @NotNull [] sets) {
+    SHA2_Return compute(final @NotNull BitSet @NotNull [] sets) {
         byte[][][] H0 = initialHash(sets.length + 1);
 
         for (int i = 0; i < sets.length; i++) {
@@ -87,5 +87,5 @@ public abstract class SHA_2_B32 extends SHA_B32 {
 
     abstract byte @NotNull [][][] initialHash(final int length);
 
-    abstract @NotNull HashReturn finalValue(final byte @NotNull [][][] H0, final int length);
+    abstract @NotNull SHA2_Return finalValue(final byte @NotNull [][][] H0, final int length);
 }

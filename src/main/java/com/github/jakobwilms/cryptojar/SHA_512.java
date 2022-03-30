@@ -27,7 +27,7 @@ public class SHA_512 extends SHA_2_B64 {
     }
 
     @Override
-    HashReturn finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
-        return new HashReturn.SHA_512_HashReturn(H0, length);
+    SHA2_Return finalValue(byte @NotNull [][][] H0, int length, final int truncate) {
+        return new SHA2_Return.SHA_512_HashReturn(H0, length);
     }
 }

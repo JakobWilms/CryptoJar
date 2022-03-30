@@ -11,10 +11,9 @@ public class Test {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(runnable, 0L, 1, TimeUnit.MILLISECONDS);
          */
-        System.out.println(HashAlgorithm.getInstance("sha-256").hash("abc").hashedHex());
-        System.out.println(bytesToHex(MessageDigest.getInstance("SHA-256").digest("abc".getBytes(StandardCharsets.UTF_8))));
+        System.out.println(HashAlgorithm.getInstance("sha3-256").hash("ẞ˙Ł€&®ĦŦ’Ŋ&ÐẞªŊẞŊ’ẞẞẞẞẞẞẞẞẞẞẞẞ€Ł↑ıııııııııııııııııııııııııŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩ‹‘’‘‘‘‘‘‘‘‘‘‘‘"));
+        System.out.println(bytesToHex(MessageDigest.getInstance("SHA3-256").digest("ẞ˙Ł€&®ĦŦ’Ŋ&ÐẞªŊẞŊ’ẞẞẞẞẞẞẞẞẞẞẞẞ€Ł↑ıııııııııııııııııııııııııŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁŁΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩΩ‹‘’‘‘‘‘‘‘‘‘‘‘‘".getBytes(StandardCharsets.UTF_8))));
 
-        System.out.println(-11 % 5);
     }
 
     private static String bytesToHex(byte[] hash) {

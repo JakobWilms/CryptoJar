@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.BitSet;
 
 public class SHA_224 extends SHA_2_B32 {
 
@@ -50,7 +49,7 @@ public class SHA_224 extends SHA_2_B32 {
     }
 
     @Override
-    @NotNull HashReturn finalValue(byte @NotNull [][][] H0, int length) {
-        return new HashReturn.SHA_224_HashReturn(H0, length);
+    @NotNull SHA2_Return finalValue(byte @NotNull [][][] H0, int length) {
+        return new SHA2_Return.SHA_224_HashReturn(H0, length);
     }
 }

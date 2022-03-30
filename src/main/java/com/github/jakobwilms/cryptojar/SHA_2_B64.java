@@ -58,13 +58,13 @@ public abstract class SHA_2_B64 extends HashAlgorithm {
     };
 
     @Override
-    public HashReturn hash(byte @NotNull [] bytes, final int truncate) {
+    public SHA2_Return hash(byte @NotNull [] bytes, final int truncate) {
         BitSet[] bitSets = preprocess(BitSet.valueOf(bytes), bytes.length * 8);
         return finalValue(compute(bitSets, truncate, null), bitSets.length, -1);
     }
 
     @Override
-    BitSet @NotNull [] preprocess(@NotNull BitSet bitSet, int size) {
+    protected BitSet @NotNull [] preprocess(@NotNull BitSet bitSet, int size) {
         // PADDING
         bitSet.set(size, true);
         int bitsToAdd = 0;
@@ -129,7 +129,7 @@ public abstract class SHA_2_B64 extends HashAlgorithm {
         return H0;
     }
 
-    abstract HashReturn finalValue(final byte @NotNull [][][] H0, final int length, final int truncate);
+    abstract SHA2_Return finalValue(final byte @NotNull [][][] H0, final int length, final int truncate);
 
     abstract byte @NotNull [][][] initialHash(final int length);
 }

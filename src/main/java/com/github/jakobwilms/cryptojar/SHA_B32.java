@@ -2,18 +2,17 @@ package com.github.jakobwilms.cryptojar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.BitSet;
 
 public abstract class SHA_B32 extends HashAlgorithm {
 
     @Override
-    public HashReturn hash(byte @NotNull [] bytes, final int truncate) {
+    public SHA2_Return hash(byte @NotNull [] bytes, final int truncate) {
         BitSet[] bitSets = preprocess(BitSet.valueOf(bytes), bytes.length * 8);
         return compute(bitSets);
     }
 
-    BitSet @NotNull [] preprocess(final @NotNull BitSet bitSet, int size) {
+    protected BitSet @NotNull [] preprocess(final @NotNull BitSet bitSet, int size) {
         // PADDING
         bitSet.set(size, true);
         int bitsToAdd = 0;
@@ -35,5 +34,5 @@ public abstract class SHA_B32 extends HashAlgorithm {
         return sets;
     }
 
-    abstract HashReturn compute(final @NotNull BitSet @NotNull [] sets);
+    abstract SHA2_Return compute(final @NotNull BitSet @NotNull [] sets);
 }

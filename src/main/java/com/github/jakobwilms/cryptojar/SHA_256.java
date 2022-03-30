@@ -26,7 +26,7 @@ public class SHA_256 extends SHA_2_B32 {
     }
 
     @Override
-    @NotNull HashReturn finalValue(final byte @NotNull [][][] H0, final int length) {
-        return new HashReturn.SHA_256_HashReturn(H0, length);
+    @NotNull SHA2_Return finalValue(final byte @NotNull [][][] H0, final int length) {
+        return new SHA2_Return.SHA_256_HashReturn(H0, length);
     }
 }
